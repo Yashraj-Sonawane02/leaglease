@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legalease - Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Hooks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- html2pdf.js for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-scale-balanced logo-icon"></i>
+                <span class="logo-text">Legalease</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">New Upload</a>
+                <button id="export-pdf-btn" class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+                <button id="export-json-btn" class="btn btn-outline"><i class="fa-solid fa-code"></i> Export JSON</button>
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <div class="dashboard-header">
+            <div>
+                <h2>Contract Analysis Report</h2>
+                <p>Document: <strong id="dashboard-file-name">Unknown Contract</strong></p>
+                <div class="badge-risk badge-high hidden" id="overall-risk-badge" style="display:inline-block; margin-top:0.5rem;">HIGH OVERALL RISK</div>
+            </div>
+        </div>
+
+        <!-- Risk Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-icon icon-blue">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="summary-info">
+                    <h4>Total Clauses</h4>
+                    <p id="stat-total">0</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon icon-red">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <div class="summary-info">
+                    <h4>High Risk ⚠️</h4>
+                    <p id="stat-high">0</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon icon-orange">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="summary-info">
+                    <h4>Medium Risk ⚡</h4>
+                    <p id="stat-medium">0</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon icon-green">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="summary-info">
+                    <h4>Low Risk ✅</h4>
+                    <p id="stat-low">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+            
+            <!-- Main Content Area: Clauses -->
+            <div class="main-content">
+                
+                <div class="controls-bar">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All Clauses</button>
+                        <button class="filter-btn" data-filter="HIGH">High Risk ⚠️</button>
+                        <button class="filter-btn" data-filter="MEDIUM">Medium Risk ⚡</button>
+                        <button class="filter-btn" data-filter="LOW">Low Risk ✅</button>
+                        <button class="filter-btn" data-filter="illegal">Illegal Only 🚫</button>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search clauses...">
+                    </div>
+                </div>
+
+                <div class="clauses-container" id="clauses-container">
+                    <!-- Clauses will be injected here dynamically -->
+                    <div style="text-align:center; padding: 3rem; color: var(--text-muted);">
+                        Loading analysis data...
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Sidebar Area: Chart & Q&A -->
+            <div class="sidebar">
+                
+                <!-- Clause-wise Risk Chart -->
+                <div class="chart-container-wrapper" style="margin-bottom: 2rem;">
+                    <h3>Clause-wise Risk</h3>
+                    <div class="chart-inner">
+                        <canvas id="clauseRiskChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Risk Visualization -->
+                <div class="chart-container-wrapper">
+                    <h3>Risk Distribution</h3>
+                    <div class="chart-inner">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Legal Assistant Q&A -->
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div>
+                            <h3>Legal Assistant</h3>
+                            <p>Ask anything about this contract</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message bot-message">
+                            Hello! I've analyzed this contract. What would you like to know? Try asking:
+                            <ul style="margin-top:0.5rem; margin-bottom:0; padding-left:1.5rem;">
+                                <li>"Can the landlord terminate this agreement legally?"</li>
+                                <li>"Is the lock-in period enforceable?"</li>
+                                <li>"What are the highest risks here?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" id="chat-input-field" placeholder="Ask a question..." autocomplete="off">
+                        <button id="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Init dashboard specific logic
+        document.addEventListener('DOMContentLoaded', () => {
+            if(window.LegaleaseApp) {
+                window.LegaleaseApp.initDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

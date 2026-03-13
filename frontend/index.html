@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legalease - AI Contract Risk Detection</title>
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Hooks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-scale-balanced logo-icon"></i>
+                <span class="logo-text">Legalease</span>
+            </div>
+            <div class="nav-links">
+                <a href="#how-it-works">How it Works</a>
+                <a href="#features">Features</a>
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="badge">Legal Tech AI</div>
+                <h1>RAG based Risk Detection with <span>Privacy Protection</span>.</h1>
+                <p>Upload any legal contract and get an instant, structured breakdown of high, medium, and low-risk clauses, complete with legal context—while masking all your sensitive data locally.</p>
+                <div class="hero-actions">
+                    <a href="#upload-section" class="btn btn-primary">Try it Now <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload-section" class="upload-section">
+            <div class="container">
+                <div class="upload-container">
+                    <div class="upload-header">
+                        <h2>Analyze your Contract</h2>
+                        <p>Upload a PDF contract to instantly identify risks and obligations.</p>
+                    </div>
+                    
+                    <div class="drop-zone" id="drop-zone">
+                        <input type="file" id="file-input" accept=".pdf" hidden>
+                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                        <h3>Drag & drop your PDF here</h3>
+                        <p>or</p>
+                        <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                        <p class="file-hint">Supported formats: .pdf (Max 10MB)</p>
+                    </div>
+
+                    <div id="file-details" class="file-details hidden">
+                        <div class="file-info">
+                            <i class="fa-solid fa-file-pdf document-icon"></i>
+                            <span id="file-name" class="file-name">contract.pdf</span>
+                            <button id="remove-file" class="icon-btn remove-btn"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <button id="analyze-btn" class="btn btn-primary btn-full">Analyze Contract <i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                    </div>
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loading-state" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <h3 id="loading-text">Processing Document...</h3>
+                        
+                        <div class="progress-steps">
+                            <div class="step active" id="step-1">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Reading PDF</span>
+                            </div>
+                            <div class="step" id="step-2">
+                                <i class="fa-solid fa-circle"></i>
+                                <span>Masking sensitive data</span>
+                            </div>
+                            <div class="step" id="step-3">
+                                <i class="fa-solid fa-circle"></i>
+                                <span>Splitting clauses</span>
+                            </div>
+                            <div class="step" id="step-4">
+                                <i class="fa-solid fa-circle"></i>
+                                <span>Analyzing contract</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="how-it-works bg-alt">
+            <div class="container">
+                <div class="section-title">
+                    <h2>How it Works</h2>
+                    <p>Four simple steps to complete legal clarity.</p>
+                </div>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Upload & Read</h3>
+                        <p>Upload your PDF contract. Our system securely parses the document structure and extracts the raw text.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Privacy Masking</h3>
+                        <p>Sensitive information like Aadhaar, IFSC, names, and phone numbers are automatically masked locally before analysis.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Clause Splitting & Retrieval</h3>
+                        <p>The document is broken down into clauses. Relevant legal context is retrieved from our FAISS vector database.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>AI Analysis</h3>
+                        <p>An advanced LLM individually analyzes each clause for risk, legality, and references applicable laws.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <i class="fa-solid fa-scale-balanced logo-icon"></i>
+                    <span class="logo-text">Legalease</span>
+                </div>
+                <p>&copy; 2026 Legalease AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
